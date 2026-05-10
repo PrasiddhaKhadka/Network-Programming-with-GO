@@ -33,12 +33,12 @@ func (s *Server) Handle(path string, handler http.Handler) {
 
 func (s *Server) handle(method string, path string, handler AppHandler) {
 	pattern := method + " " + path
-	s.mux.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+	s.mux.HandleFunc(pattern, logger(func(w http.ResponseWriter, r *http.Request) {
 		if err := handler(w, r); err != nil {
 			log.Printf("handler error: %v\n", err)
 			s.error(w, r, err)
 		}
-	})
+	}))
 }
 
 func (s *Server) Get(path string, handler AppHandler)    { s.handle("GET", path, handler) }
